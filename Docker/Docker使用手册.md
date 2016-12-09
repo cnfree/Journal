@@ -10,8 +10,6 @@
  -  安装 libcgroup `yum install libcgroup`  
  -  启动cgconfig服务 `sudo /etc/init.d/cgconfig start`   
  -  将cgconfig设为开机启动 `chkconfig cgconfig on`
- 
----------
 
 ## 使用 Docker
 
