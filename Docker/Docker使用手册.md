@@ -41,12 +41,22 @@
 * 制作 Java 镜像：`docker commit CONTAINER cnfree/sshjava`，大小为480M。
 * 导出 Java 镜像：`docker save -o sshjava.tar cnfree/sshjava`。
 * 导入 Java 镜像：`docker load < sshjava.tar`。
-* 运行 Java 镜像容器：`docker run -d -P --name ssh_docker cnfree/sshjava`。
-* 带终端的容器运行方式：`docker run -P -i -t cnfree/sshjava /bin/bash`。
+* 运行 Java 镜像容器：`docker run -d -p 2222:22 --name ssh_docker cnfree/sshjava`。
+* 执行 Shell：`docker exec -i -t ssh_docker /bin/bash`。
 
+
+## 参考资料
+* [Docker-容器的操作][6]
+* [深入分析Docker镜像原理][7]
+* [一篇不一样的docker原理解析][8]
+* [全网贯通无需端口映射][9]
 
   [1]: https://github.com/cnfree/Journal/raw/master/Docker/docker1.7.1.zip
   [2]: http://www.server110.com/docker/201411/11122.html
   [3]: https://hub.docker.com
   [4]: https://hub.docker.com/r/rastasheep/ubuntu-sshd
   [5]: http://blog.csdn.net/zhang__jiayu/article/details/43200685
+  [6]: http://www.cnblogs.com/zydev/p/5803461.html
+  [7]: http://www.csdn.net/article/2015-08-21/
+  [8]: https://zhuanlan.zhihu.com/p/22382728
+  [9]: http://dockone.io/article/466
