@@ -40,7 +40,7 @@
 * 通过 Ubuntu 命令安装 OpenJDK：`apt-get install openjdk-8-jre`。
 * 制作 Java 镜像：`docker commit CONTAINER cnfree/sshjava`，大小为480M。
 * 导出 Java 镜像：`docker save -o sshjava.tar cnfree/sshjava`。
-* 导入 Java 镜像：`docker load < sshjava.tar`。
+* 导入 Java 镜像：`docker load -i sshjava.tar`。
 * 运行 Java 镜像容器：`docker run -d -p 2222:22 --name ssh_docker cnfree/sshjava`。
 * 执行 Shll：`docker exec -i -t ssh_docker /bin/bash`。
 
