@@ -224,18 +224,18 @@
 
 　　下面是锁释放-获取的示例代码：
 ```
-  class MonitorExample {
-      int a = 0;
+    class MonitorExample {
+        int a = 0;
 
-      public synchronized void writer() {  //1
-          a++;                             //2
-      }                                    //3
+        public synchronized void writer() {  //1
+            a++;                             //2
+        }                                    //3
 
-      public synchronized void reader() {  //4
-          int i = a;                       //5
-          ……
-      }                                    //6
-  }
+        public synchronized void reader() {  //4
+            int i = a;                       //5
+            ……
+        }                                    //6
+    }
 ```
 
 　　假设线程A执行writer()方法，随后线程B执行reader()方法。根据happens before规则，这个过程包含的happens before关系可以分为三类：
@@ -289,30 +289,30 @@
 
 　　CAS模拟实现:
 ```
-public class SimulatedCAS {
+    public class SimulatedCAS {
 
-    private int value;
+        private int value;
 
-    public SimulatedCAS(int value) {
-        this.value = value;
-    }
-
-    public synchronized int get(){
-        return value;
-    }
-
-    public synchronized int compareAndSwap(int expectedValue, int newValue){
-        int oldValue = value;//获取旧值
-        if(oldValue == expectedValue){//如果期望值与当前V位置的值相同就给予新值
-            value = newValue;
+        public SimulatedCAS(int value) {
+            this.value = value;
         }
-        return oldValue;//返回V位置原有的值
-    }
 
-    public synchronized boolean compareAndSet(int expectedValue, int newValue){
-        return ( expectedValue == compareAndSwap(expectedValue, newValue));
+        public synchronized int get(){
+            return value;
+        }
+
+        public synchronized int compareAndSwap(int expectedValue, int newValue){
+            int oldValue = value;//获取旧值
+            if(oldValue == expectedValue){//如果期望值与当前V位置的值相同就给予新值
+                value = newValue;
+            }
+            return oldValue;//返回V位置原有的值
+        }
+
+        public synchronized boolean compareAndSet(int expectedValue, int newValue){
+            return ( expectedValue == compareAndSwap(expectedValue, newValue));
+        }
     }
-}
 ```
 　　CAS使用，以AtomicInteger为例:
 ```
