@@ -23,8 +23,9 @@
 * `运行期重排`：CPU在执行过程中，动态分析依赖部件的效能，对指令做重排序优化。
 
 ## 重排序原理实例
-<div align=center>[![](http://pic.yupoo.com/kenwug/68620954aa82/tnkjlshh.jpg)]</div>
-
+<div align=center>
+![](http://pic.yupoo.com/kenwug/68620954aa82/tnkjlshh.jpg)
+</div><br/>
 　　从图中可以看到，这是一台配备双CPU的计算机，cache 按地址被分成了两块 cache banks，分别是 cache bank0 和 cache bank1。
 
 * Memory Bank的划分
