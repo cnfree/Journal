@@ -116,6 +116,36 @@
     fmt.Printf("%p\n", sb)          //输出：0xc0840042a8
     fmt.Println(&a[5], &sb[0])      //输出：0xc0840042a8 0xc0840042a8
 ```
-## make
+## make，new
+　　golang属于c family，而c程序在unix的内在模型:
 
+```
+ |低地址|text|data|bss|heap-->|unused|<--stack|env|高地址|
+```
+　　其中:
+1. text存储程序主体，即机器指令。
+2. data,bss存储全局变量，data存储初始化的全局变量，bss存储未初始化的全局变量，bss全称Block start by symbol，以符号开始的块。
+3. heap: 动态内存堆。
+4. stack: 函数调用栈。
+5. env: 程序执行环境变量。
+
+　　value types: variable point direct to value，即变量在函数调用栈中的内容就是value。
+
+　　reference types: variable point to reference toward heap，即变量在函数调用栈中的内容是reference，指向heap中的某块内存。
+
+　　赋值操作=或:=，都是将某个variable在函数调用中栈中的内容复制给目标变量。对于value types是复制值，对于reference types是复制引用。
+
+* new()操作: 在函数调用栈中分配内存, 内容是目标类型的零值, 返回值是目标类型的指针.
+
+* make()操作: 先在动态内存堆分配内存, 内容也是目标类型的零值, 再在函数调用栈中分配内存, 内容是分配的堆地址, 返回值是目标类型的值.
+
+　　一般来说，new()用于value types，make()用于reference types。但是， new()也可用于refrences types, 只是返回值是nil的指针。make()不可用于value types，编译会出错: make(xxx) cannot  make type xxx。
+
+　　对于非elementary(primitive) type，即非基本类型，new()等价于&Type{}，但对于基本类型，不支持&P{}语法，就必须使用new()来创建指针。
+
+　　对于初始化空值，make(Type)等价于Type{}，但要初始化多值，就必须使用make(Type, m)。
+
+　　以上原则更多体现在长变量声明long variable declaration，与短变量声明short variable declaration。对于后者，更常使用new()与make()初始化。
+
+　　由于reference types的特点，容易造成某些陷阱。例如: 多个reference指向heap中的大内存，导致不能及时释放造成内存泄露危险。
 ## happens-before
