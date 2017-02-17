@@ -41,7 +41,7 @@ Please also check the startup option and set the "Class Decompiler Viewer" as th
 
 ![Preferences](https://raw.githubusercontent.com/cnfree/Journal/master/Decompiler/Preferences.png)
 
-## Install Eclipse Decompiler Plugin
+## Install Eclipse Class Decompiler Plugin
 * Click on "Help > Eclipse Marketplace...",
 * Search "Eclipse Class Decompiler" in the Eclipse marketplace dialog,
 * Find "Eclipse Class Decompiler" and click on button "install",
