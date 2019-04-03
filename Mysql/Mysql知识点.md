@@ -86,6 +86,87 @@
  4. undo日志用来回滚未提交的事务，它存储在回滚段里；
  5. InnoDB是基于MVCC的存储引擎，它利用了存储在回滚段里的undo日志，即数据的旧版本，提高并发；
  6. InnoDB之所以并发高，快照读不加锁； 
- 7. InnoDB所有普通select都是快照读；   
+ 7. InnoDB所有普通select都是快照读；
+ 
+## InnoDB的索引  
+ InnoDB的索引有两类索引，***聚集索引***(Clustered Index)与***普通索引***(Secondary Index)。  
+ 
+ InnoDB的每一个表都会有聚集索引：
+ 1. 如果表定义了PK，则PK就是聚集索引；
+ 2. 如果表没有定义PK，则第一个非空unique列是聚集索引；
+ 3. 否则，InnoDB会创建一个隐藏的row-id作为聚集索引；
+ 4. 聚集索引，叶子节点存储行记录(row)；
+ 5. 普通索引，叶子节点存储了PK的值；
    
+## 聚集索引和普通索引
+ InnoDB的普通索引，实际上会扫描两遍：第一遍，由普通索引找到PK；第二遍，由PK找到行记录；
+
+ ![B+树][Index]
+ 1. 第一幅图，id PK的聚集索引，叶子存储了所有的行记录；
+ 2. 第二幅图，name上的普通索引，叶子存储了PK的值；
+ 
+    ```
+    select * from t where name=’shenjian’;
+  
+    (1)会先在name普通索引上查询到PK=1；
+  
+    (2)再在聚集索引上查询到(1,shenjian, m, A)的行记录；
+    ```
+ 
+## 隔离级别
+ Mysql默认的事务隔离级别为***可重复读***(Repeated Read, RR)。
+ 
+## 记录锁(Record Locks) 
+ 记录锁，它封锁索引记录，以阻止其他事务插入，更新，删除
+ ```
+  --记录锁，在id=1的索引记录上加锁，以阻止其他事务插入，更新，删除id=1的这一行
+  select * from t where id=1 for update; 
+  
+  --快照读，无锁
+  select * from t where id=1; 
+ ```
+ 
+## 间隙锁(Gap Locks) 
+ 间隙锁，它封锁索引记录中的间隔，或者第一条索引记录之前的范围，又或者最后一条索引记录之后的范围。
+
+ ```
+    -- 会封锁区间，以阻止其他事务id=10的记录插入
+    select * from t 
+        where id between 8 and 15 
+        for update;
+ ```
+ 
+  * 间隙锁的主要目的，就是为了防止其他事务在间隔中插入数据，以导致“不可重复读”。
+       
+  * 如果把事务的隔离级别降级为读提交(Read Committed, RC)，间隙锁则会自动失效。   
+ 
+### 幻读(Phantom Read)
+
+ * 为什么要阻止id=10的记录插入？
+ 
+    如果能够插入成功，头一个事务执行相同的SQL语句，会发现结果集多出了一条记录，即幻影数据。
+    
+## 临键锁(Next-Key Locks)
+ * 临键锁，是记录锁与间隙锁的组合，它的封锁范围，既包含索引记录，又包含索引区间。
+ * 临键锁会封锁索引记录本身，以及索引记录之前的区间。
+ * 临键锁的主要目的，也是为了避免幻读。如果把事务的隔离级别降级为RC，临键锁则也会失效。
+
+ ```
+  表中有四条记录：
+    1, shenjian, m, A
+    3, zhangsan, m, A
+    5, lisi,     m, A
+    9, wangwu,   f, B
+   
+  PK上潜在的临键锁为：
+    (-infinity, 1]
+    (1, 3]
+    (3, 5]
+    (5, 9]
+    (9, +infinity]
+ ```
+    
+    
+ 
  [B+TreeImage]:img/B+Tree.png
+ [Index]:img/index.png
