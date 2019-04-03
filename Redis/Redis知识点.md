@@ -50,6 +50,27 @@
    key = {hello}_tatao 的有效部分是hello，详情可以关注HashTag
    key = hello_taotao 的有效部分是hello_taotao
    ```
+   
+## 分布式锁
+
+## 消息队列
+
+## 发布者订阅者
+
+## 延时队列
+
+## 迭代扫描Scan
+
+## 大key扫描
+
+## 线程IO模型
+
+## 持久化
+
+## 管道(Pipeline)
+
+## 事务
+   
 ## 参考资料
  * [Redis深度历险--核心原理与应用实践][4]
  * [Redis源码解读][5]
