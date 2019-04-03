@@ -151,22 +151,83 @@
  * 临键锁会封锁索引记录本身，以及索引记录之前的区间。
  * 临键锁的主要目的，也是为了避免幻读。如果把事务的隔离级别降级为RC，临键锁则也会失效。
 
- ```
-  表中有四条记录：
-    1, shenjian, m, A
-    3, zhangsan, m, A
-    5, lisi,     m, A
-    9, wangwu,   f, B
-   
-  PK上潜在的临键锁为：
-    (-infinity, 1]
-    (1, 3]
-    (3, 5]
-    (5, 9]
-    (9, +infinity]
- ```
-    
-    
+     ```
+      表中有四条记录：
+        1, shenjian, m, A
+        3, zhangsan, m, A
+        5, lisi,     m, A
+        9, wangwu,   f, B
+       
+      PK上潜在的临键锁为：
+        (-infinity, 1]
+        (1, 3]
+        (3, 5]
+        (5, 9]
+        (9, +infinity]
+     ```
  
+## 插入意向锁 (Insert Intention Locks)
+ * 插入意向锁，是间隙锁(Gap Locks)的一种（所以，也是实施在索引上的），它是专门针对insert操作的。
+ * 多个事务，在同一个索引，同一个范围区间插入记录时，如果插入的位置不冲突，不会阻塞彼此。
+    
+## 自增锁（Auto-inc Locks） 
+  
+ * 自增锁是一种特殊的表级别锁（table-level lock），专门针对事务插入AUTO_INCREMENT类型的列。
+ * InnoDB提供了innodb_autoinc_lock_mode配置，可以调节与改变该锁的模式与行为。
+  
+## innodb_autoinc_lock_mode
+  
+ * innodb_autoinc_lock_mode = 0 (“traditional” lock mode) 表级锁
+  
+    ```
+    优点：极其安全
+    
+    缺点：对于这种模式，写入性能最差。任何一种insert-like语句，都会产生一个table-level
+    ```
+       
+ * innodb_autoinc_lock_mode = 1 (“consecutive” lock mode)  默认锁模式
+    
+    ```
+    优点：非常安全，性能与innodb_autoinc_lock_mode =0 相比要好很多。
+    
+    对于Simple inserts，则使用的是一种轻量级锁，只要获取了相应的auto  increment就释放锁，并不会等到语句结束。
+    
+    发生bulk inserts的时候还是会产生表级别的自增锁，防止在bulk insert的时候，被其他的insert语句抢走auto  increment值。
+    ```  
+  
+ * innodb_autoinc_lock_mode = 2 (“interleaved” lock mode)
+    
+    ```
+    优点：性能非常好，提高并发，SBR不安全
+    
+    缺点：一条bulk insert，得到的自增id可能不连续。SBR模式下：会导致复制出错，不一致
+    ```
+  
+## AUTO_INCREMENT计数器初始化 
+ 
+ * 计数器仅存在于内存中，而不存储在磁盘上。
+ * 服务器重新启动后初始化自动递增计数器，InnoDB将在首次插入行到包含AUTO_INCREMENT列的表时执行以下语句的等效语句。
+    ```
+    SELECT MAX(ai_col) FROM table_name FOR UPDATE; 
+    ``` 
+    
+## 死锁
+
+ * 并发插入相同记录，可能死锁(某一个回滚)
+ * 并发插入，可能出现间隙锁死锁(难排查)
+ * show engine innodb status; 可以查看InnoDB的锁情况，也可以调试死锁
+ 
+## 可重复读级别下的锁
+ 
+ * 普通Select快照读，无锁
+ * 带锁的Select/Update/Delete，where条件只有一行为记录锁，范围查询间隙锁/临键锁 
+ * Insert 插入意向锁
+ 
+ 
+ 
+ 
+ 
+ 
+     
  [B+TreeImage]:img/B+Tree.png
  [Index]:img/index.png
