@@ -1,5 +1,5 @@
 # Mysql知识点
-关键字： `索引` `优化` `锁` `数据结构` `主从复制` `数据一致性` `分库` `分表` `代理中间件`  
+关键字: `索引` `优化` `锁` `数据结构` `主从复制` `数据一致性` `分库` `分表` `代理中间件`  
 
 ## Hash索引和B-Tree索引
  * 单行查询Hash索引更快，如果业务需求全部都是单行访问，可以使用hash索引
@@ -53,7 +53,7 @@
  * 对应到数据库，可以理解为，写事务没有提交，读相关数据的select也会被阻塞。
  
 ## 数据多版本
- 数据多版本是一种能够进一步提高并发的方法，它的核心原理是：
+ 数据多版本是一种能够进一步提高并发的方法，它的核心原理是:
  1. 写任务发生时，将数据克隆一份，以版本号区分；
  2. 写任务操作新克隆的数据，直至提交；
  3. 并发读任务可以继续读取旧版本的数据，不至于阻塞；  
@@ -91,7 +91,7 @@
 ## InnoDB的索引  
  InnoDB的索引有两类索引，**聚集索引**(Clustered Index)与**普通索引**(Secondary Index)。  
  
- InnoDB的每一个表都会有聚集索引：
+ InnoDB的每一个表都会有聚集索引:
  1. 如果表定义了PK，则PK就是聚集索引；
  2. 如果表没有定义PK，则第一个非空unique列是聚集索引；
  3. 否则，InnoDB会创建一个隐藏的row-id作为聚集索引；
@@ -99,7 +99,7 @@
  5. 普通索引，叶子节点存储了PK的值；
    
 ## 聚集索引和普通索引
- InnoDB的普通索引，实际上会扫描两遍：第一遍，由普通索引找到PK；第二遍，由PK找到行记录；
+ InnoDB的普通索引，实际上会扫描两遍:第一遍，由普通索引找到PK；第二遍，由PK找到行记录；
 
  ![B+树][Index]
  1. 第一幅图，id PK的聚集索引，叶子存储了所有的行记录；
@@ -152,13 +152,13 @@
  * 临键锁的主要目的，也是为了避免幻读。如果把事务的隔离级别降级为RC，临键锁则也会失效。
 
      ```
-      表中有四条记录：
+      表中有四条记录:
         1, shenjian, m, A
         3, zhangsan, m, A
         5, lisi,     m, A
         9, wangwu,   f, B
        
-      PK上潜在的临键锁为：
+      PK上潜在的临键锁为:
         (-infinity, 1]
         (1, 3]
         (3, 5]
@@ -180,15 +180,15 @@
  * innodb_autoinc_lock_mode = 0 (“traditional” lock mode) 表级锁
   
     ```
-    优点：极其安全
+    优点:极其安全
     
-    缺点：对于这种模式，写入性能最差。任何一种insert-like语句，都会产生一个table-level
+    缺点:对于这种模式，写入性能最差。任何一种insert-like语句，都会产生一个table-level
     ```
        
  * innodb_autoinc_lock_mode = 1 (“consecutive” lock mode)  默认锁模式
     
     ```
-    优点：非常安全，性能与innodb_autoinc_lock_mode =0 相比要好很多。
+    优点:非常安全，性能与innodb_autoinc_lock_mode =0 相比要好很多。
     
     对于Simple inserts，则使用的是一种轻量级锁，只要获取了相应的auto  increment就释放锁，并不会等到语句结束。
     
@@ -198,9 +198,9 @@
  * innodb_autoinc_lock_mode = 2 (“interleaved” lock mode)
     
     ```
-    优点：性能非常好，提高并发，SBR不安全
+    优点:性能非常好，提高并发，SBR不安全
     
-    缺点：一条bulk insert，得到的自增id可能不连续。SBR模式下：会导致复制出错，不一致
+    缺点:一条bulk insert，得到的自增id可能不连续。SBR模式下:会导致复制出错，不一致
     ```
   
 ## AUTO_INCREMENT计数器初始化 
@@ -222,7 +222,74 @@
  * 普通Select快照读，无锁
  * 带锁的Select/Update/Delete，where条件只有一行为记录锁，范围查询间隙锁/临键锁 
  * Insert 插入意向锁
- 
+
+## [Binlog][1]（推荐Mixed，默认Statement）
+  Mysql binlog日志有三种格式，分别为Statement,MiXED,以及ROW
+  
+  * Statement:每一条会修改数据的sql都会记录在binlog中。
+  
+  * Row:不记录sql语句上下文相关信息，仅保存哪条记录被修改。
+  
+  * Mixed level: 是以上两种level的混合使用
+  
+    一般的语句修改使用statment格式保存binlog，如一些函数，statement无法完成主从复制的操作，则采用row格式保存binlog,MySQL会根据执行的每一条具体的sql语句来区分对待记录的日志形式，也就是在Statement和Row之间选择 一种.新版本的MySQL中队row level模式也被做了优化，并不是所有的修改都会以row level来记录，像遇到表结构变更的时候就会以statement模式来记录。至于update或者delete等修改数据的语句，还是会记录所有行的 变更。 
+
+## 执行计划
+  ```
+  explain select * from table where table.id = 1 
+  
+  table | type | possible_keys | key | key_len | ref | rows | Extra
+  ```  
+  
+  * table: 显示这一行的数据是关于哪张表的
+  
+  * type: 这是重要的列，显示连接使用了何种类型。从最好到最差的连接类型为const、eq_reg、ref、range、indexhe和ALL
+  
+    说明: 不同连接类型的解释（按照效率高低的顺序排序）
+  
+    * system: 表只有一行:system表。这是const连接类型的特殊情况。
+  
+    * const: 表中的一个记录的最大值能够匹配这个查询（索引可以是主键或惟一索引）。因为只有一行，这个值实际就是常数，因为MYSQL先读这个值然后把它当做常数来对待。
+  
+    * eq_ref: 在连接中，MYSQL在查询时，从前面的表中，对每一个记录的联合都从表中读取一个记录，它在查询使用了索引为主键或惟一键的全部时使用。
+  
+    * ref: 这个连接类型只有在查询使用了不是惟一或主键的键或者是这些类型的部分（比如，利用最左边前缀）时发生。对于之前的表的每一个行联合，全部记录都将从表中读出。这个类型严重依赖于根据索引匹配的记录多少—越少越好。
+  
+    * range: 这个连接类型使用索引返回一个范围中的行，比如使用>或<查找东西时发生的情况。
+  
+    * index: 这个连接类型对前面的表中的每一个记录联合进行完全扫描（比ALL更好，因为索引一般小于表数据）。
+  
+    * ALL: 这个连接类型对于前面的每一个记录联合进行完全扫描，**这一般比较糟糕，应该尽量避免**。
+  
+  * possible_keys: 显示可能应用在这张表中的索引。如果为空，没有可能的索引。可以为相关的域从WHERE语句中选择一个合适的语句
+  
+  * key: 实际使用的索引。如果为NULL，则没有使用索引。很少的情况下，MYSQL会选择优化不足的索引。这种情况下，可以在SELECT语句中使用**USE INDEX**（indexname）来强制使用一个索引或者用**IGNORE INDEX**（indexname）来强制MYSQL忽略索引
+  
+  * key_len: 使用的索引的长度。在不损失精确性的情况下，长度越短越好
+  
+  * ref: 显示索引的哪一列被使用了，如果可能的话，是一个常数
+  
+  * rows: MYSQL认为必须检查的用来返回请求数据的行数
+  
+  * Extra: 关于MYSQL如何解析查询的额外信息。将在表4.3中讨论，但这里可以看到的坏的例子是Using temporary和Using filesort，意思MYSQL根本不能使用索引，结果是检索会很慢
+  
+    说明: extra列返回的描述的意义
+  
+    * Distinct: 一旦mysql找到了与行相联合匹配的行，就不再搜索了。
+  
+    * Not exists: mysql优化了LEFT JOIN，一旦它找到了匹配LEFT JOIN标准的行，就不再搜索了。
+  
+    * Range checked for each Record（index map:#）: 没有找到理想的索引，因此对从前面表中来的每一个行组合，mysql检查使用哪个索引，并用它来从表中返回行。这是使用索引的最慢的连接之一。
+  
+    * Using filesort: **查询就需要优化了**。mysql需要进行额外的步骤来发现如何对返回的行排序。它根据连接类型以及存储排序键值和匹配条件的全部行的行指针来排序全部行。
+  
+    * Using index: 列数据是从仅仅使用了索引中的信息而没有读取实际的行动的表返回的，这发生在对表的全部的请求列都是同一个索引的部分的时候。
+  
+    * Using temporary: **查询需要优化了**。这里，mysql需要创建一个临时表来存储结果，这通常发生在对不同的列集进行ORDER BY上，而不是GROUP BY上。
+  
+    * Where used: 使用了WHERE从句来限制哪些行将与下一张表匹配或者是返回给用户。如果不想返回表中的全部行，并且连接类型ALL或index，这就会发生，或者是查询有问题。
+  
+
  
 ## 主从不一致的解决方案
 
@@ -245,19 +312,19 @@
  
  假设原来分了2个库，d0和d1，都放在服务器s0上，s0同时有备机s1。
  
- 数据同步：
+ 数据同步:
  
  1. 确保s0 -> s1同步顺利，没有明显延迟
  2. s0暂时关闭读写权限
  3. 确认s1已经完全同步s0更新
  
- 拆分库的d0和d1：
+ 拆分库的d0和d1:
  
  1. s1开放读写权限
  2. d1的dns由s0切换到s1。
  3. s0开放读写权限
  
- 横向扩容：
+ 横向扩容:
  
  1. 由4取模变成由8取模
  2. s1开放读写权限
@@ -268,3 +335,4 @@
      
  [B+TreeImage]:img/B+Tree.png
  [Index]:img/index.png
+ [1]: https://www.cnblogs.com/itcomputer/articles/5005602.html
