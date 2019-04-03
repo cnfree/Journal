@@ -89,7 +89,7 @@
  7. InnoDB所有普通select都是快照读；
  
 ## InnoDB的索引  
- InnoDB的索引有两类索引，***聚集索引***(Clustered Index)与***普通索引***(Secondary Index)。  
+ InnoDB的索引有两类索引，**聚集索引**(Clustered Index)与**普通索引**(Secondary Index)。  
  
  InnoDB的每一个表都会有聚集索引：
  1. 如果表定义了PK，则PK就是聚集索引；
@@ -114,7 +114,7 @@
     ```
  
 ## 隔离级别
- Mysql默认的事务隔离级别为***可重复读***(Repeated Read, RR)。
+ Mysql默认的事务隔离级别为**可重复读**(Repeated Read, RR)。
  
 ## 记录锁(Record Locks) 
  记录锁，它封锁索引记录，以阻止其他事务插入，更新，删除
