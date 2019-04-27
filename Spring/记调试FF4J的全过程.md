@@ -190,6 +190,10 @@
  10. 创建代理首先需要创建org.springframework.aop.Advisor,在AbstractAutoProxyCreator中有一个方法setInterceptorNames,该方法设置代理的拦截器组件，每一个拦截器会被转成一个Advisor
     
         ```
+            /*
+             * Resolves the specified interceptor names to Advisor objects.
+             * @see #setInterceptorNames
+             */
             private Advisor[] resolveInterceptorNames() {
                 ConfigurableBeanFactory cbf = (this.beanFactory instanceof ConfigurableBeanFactory ?
                         (ConfigurableBeanFactory) this.beanFactory : null);
@@ -207,6 +211,17 @@
  11. 创建代理的过程就是创建一个ProxyFactory，传入Advisor和要代理的对象实例，然后通过ProxyFactory创建代理对象
     
         ```
+            /*
+             * Create an AOP proxy for the given bean.
+             * @param beanClass the class of the bean
+             * @param beanName the name of the bean
+             * @param specificInterceptors the set of interceptors that is
+             * specific to this bean (may be empty, but not null)
+             * @param targetSource the TargetSource for the proxy,
+             * already pre-configured to access the bean
+             * @return the AOP proxy for the bean
+             * @see #buildAdvisors
+             */
             protected Object createProxy(
                     Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
         
