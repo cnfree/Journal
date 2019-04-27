@@ -189,94 +189,79 @@
  
  10. 创建代理首先需要创建org.springframework.aop.Advisor,在AbstractAutoProxyCreator中有一个方法setInterceptorNames,该方法设置代理的拦截器组件，每一个拦截器会被转成一个Advisor
     
-    ```
-        /*
-         * Resolves the specified interceptor names to Advisor objects.
-         * @see #setInterceptorNames
-         */
-        private Advisor[] resolveInterceptorNames() {
-            ConfigurableBeanFactory cbf = (this.beanFactory instanceof ConfigurableBeanFactory ?
-                    (ConfigurableBeanFactory) this.beanFactory : null);
-            List<Advisor> advisors = new ArrayList<Advisor>();
-            for (String beanName : this.interceptorNames) {
-                if (cbf == null || !cbf.isCurrentlyInCreation(beanName)) {
-                    Object next = this.beanFactory.getBean(beanName);
-                    advisors.add(this.advisorAdapterRegistry.wrap(next));
+        ```
+            private Advisor[] resolveInterceptorNames() {
+                ConfigurableBeanFactory cbf = (this.beanFactory instanceof ConfigurableBeanFactory ?
+                        (ConfigurableBeanFactory) this.beanFactory : null);
+                List<Advisor> advisors = new ArrayList<Advisor>();
+                for (String beanName : this.interceptorNames) {
+                    if (cbf == null || !cbf.isCurrentlyInCreation(beanName)) {
+                        Object next = this.beanFactory.getBean(beanName);
+                        advisors.add(this.advisorAdapterRegistry.wrap(next));
+                    }
                 }
+                return advisors.toArray(new Advisor[advisors.size()]);
             }
-            return advisors.toArray(new Advisor[advisors.size()]);
-        }
-    ```
+        ```
     
  11. 创建代理的过程就是创建一个ProxyFactory，传入Advisor和要代理的对象实例，然后通过ProxyFactory创建代理对象
     
-    ```
-        /*
-         * Create an AOP proxy for the given bean.
-         * @param beanClass the class of the bean
-         * @param beanName the name of the bean
-         * @param specificInterceptors the set of interceptors that is
-         * specific to this bean (may be empty, but not null)
-         * @param targetSource the TargetSource for the proxy,
-         * already pre-configured to access the bean
-         * @return the AOP proxy for the bean
-         * @see #buildAdvisors
-         */
-        protected Object createProxy(
-                Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
-    
-            if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
-                AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
-            }
-    
-            ProxyFactory proxyFactory = new ProxyFactory();
-            proxyFactory.copyFrom(this);
-    
-            if (!proxyFactory.isProxyTargetClass()) {
-                if (shouldProxyTargetClass(beanClass, beanName)) {
-                    proxyFactory.setProxyTargetClass(true);
+        ```
+            protected Object createProxy(
+                    Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
+        
+                if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
+                    AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
                 }
-                else {
-                    evaluateProxyInterfaces(beanClass, proxyFactory);
+        
+                ProxyFactory proxyFactory = new ProxyFactory();
+                proxyFactory.copyFrom(this);
+        
+                if (!proxyFactory.isProxyTargetClass()) {
+                    if (shouldProxyTargetClass(beanClass, beanName)) {
+                        proxyFactory.setProxyTargetClass(true);
+                    }
+                    else {
+                        evaluateProxyInterfaces(beanClass, proxyFactory);
+                    }
                 }
+        
+                Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+                proxyFactory.addAdvisors(advisors);
+                proxyFactory.setTargetSource(targetSource);
+                customizeProxyFactory(proxyFactory);
+        
+                proxyFactory.setFrozen(this.freezeProxy);
+                if (advisorsPreFiltered()) {
+                    proxyFactory.setPreFiltered(true);
+                }
+        
+                return proxyFactory.getProxy(getProxyClassLoader());
             }
-    
-            Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
-            proxyFactory.addAdvisors(advisors);
-            proxyFactory.setTargetSource(targetSource);
-            customizeProxyFactory(proxyFactory);
-    
-            proxyFactory.setFrozen(this.freezeProxy);
-            if (advisorsPreFiltered()) {
-                proxyFactory.setPreFiltered(true);
-            }
-    
-            return proxyFactory.getProxy(getProxyClassLoader());
-        }
-    ```
+        ```
  12. ProxyFactory实际上是AopProxyFactory的代理，创建代理实际上是通过AopProxyFactory完成的
     
-    ```
-        public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
-        
-            @Override
-            public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
-                if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
-                    Class<?> targetClass = config.getTargetClass();
-                    if (targetClass == null) {
-                        throw new AopConfigException("TargetSource cannot determine target class: " +
-                                "Either an interface or a target is required for proxy creation.");
+        ```
+            public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
+            
+                @Override
+                public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+                    if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
+                        Class<?> targetClass = config.getTargetClass();
+                        if (targetClass == null) {
+                            throw new AopConfigException("TargetSource cannot determine target class: " +
+                                    "Either an interface or a target is required for proxy creation.");
+                        }
+                        if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
+                            return new JdkDynamicAopProxy(config);
+                        }
+                        return new ObjenesisCglibAopProxy(config);
                     }
-                    if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
+                    else {
                         return new JdkDynamicAopProxy(config);
                     }
-                    return new ObjenesisCglibAopProxy(config);
                 }
-                else {
-                    return new JdkDynamicAopProxy(config);
-                }
-            }
-    ```
+        ```
  
  13. 代理有两种，一种是JdkDynamicAopProxy，一种是ObjenesisCglibAopProxy，不管哪种，都持有AdvisedSupport，这个AdvisedSupport就是之前提到的ProxyFactory，它继承了AdvisedSupport，而ProxyFactory又持有Advisor(持有拦截器)和需要被代理的对象实例，因此两种代理就这样关联到拦截器和对象实例了。
  14. JdkDynamicAopProxy实现了JDK的动态代理接口InvocationHandler，同时也实现了AopProxy接口。AopProxy接口是用来创建代理对象的接口。
