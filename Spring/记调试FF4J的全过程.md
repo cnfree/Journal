@@ -1,7 +1,7 @@
 # 记调试FF4J的全过程
 关键字： `FF4J` `@Flip` `FeatureAutoProxy` `FeatureAdvisor` `AbstractAutoProxyCreator` `ProxyFactory`
 
-本文旨在记录Spring类加载的全过程
+本文旨在记录**Spring Bean**加载及调用的全过程
 
 ## 产品功能开关配置
   1. 功能开关服务接口
