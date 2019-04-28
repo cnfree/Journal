@@ -41,54 +41,54 @@
                 }
             }
         ```
+  4. 配置component-scan扫描包 **org.ff4j.aop**
 
 ## 扫描Package
  1. 功能开关相关Bean的扫描解析过程
-    1. component-scan **org.ff4j.aop**
-    2. Spring初始化的时候会扫描org.ff4j.aop包，具体是在ClassPathBeanDefinitionScanner类的doScan(String... basePackages)方法
-    3. ClassPathScanningCandidateComponentProvider的findCandidateComponents(String basePackage)方法扫描ClassPath下的org.ff4j.aop包
-    4. 扫描实现是使用API ClassLoader.getResources("org.ff4j.aop)，在PathMatchingResourcePatternResolver类的doFindAllClassPathResources(String path)方法中
-    5. ClassPathScanningCandidateComponentProvider的isCandidateComponent方法检测是否实现了 **@Component** 注解
-    6. ClassPathBeanDefinitionScanner类的registerBeanDefinition方法会将扫描到的Component注册到容器 **DefaultListableBeanFactory** 中，通过DefaultListableBeanFactory.registerBeanDefinition方法 
-    7. 以上过程都发生在**AbstractApplicationContext**的**refresh**方法的**obtainFreshBeanFactory**中
-    ```
-        prepareRefresh();
-        
-        // Tell the subclass to refresh the internal bean factory.
-        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-
-        // Prepare the bean factory for use in this context.
-        prepareBeanFactory(beanFactory);
-
-        try {
-            // Allows post-processing of the bean factory in context subclasses.
-            postProcessBeanFactory(beanFactory);
-
-            // Invoke factory processors registered as beans in the context.
-            invokeBeanFactoryPostProcessors(beanFactory);
-
-            // Register bean processors that intercept bean creation.
-            registerBeanPostProcessors(beanFactory);
-
-            // Initialize message source for this context.
-            initMessageSource();
-
-            // Initialize event multicaster for this context.
-            initApplicationEventMulticaster();
-
-            // Initialize other special beans in specific context subclasses.
-            onRefresh();
-
-            // Check for listener beans and register them.
-            registerListeners();
-
-            // Instantiate all remaining (non-lazy-init) singletons.
-            finishBeanFactoryInitialization(beanFactory);
-
-            // Last step: publish corresponding event.
-            finishRefresh();
-        }
-    ```
+    1. Spring初始化的时候会扫描org.ff4j.aop包，具体是在ClassPathBeanDefinitionScanner类的doScan(String... basePackages)方法
+    2. ClassPathScanningCandidateComponentProvider的findCandidateComponents(String basePackage)方法扫描ClassPath下的org.ff4j.aop包
+    3. 扫描实现是使用API ClassLoader.getResources("org.ff4j.aop)，在PathMatchingResourcePatternResolver类的doFindAllClassPathResources(String path)方法中
+    4. ClassPathScanningCandidateComponentProvider的isCandidateComponent方法检测类是否包含了 **@Component** 注解
+    5. ClassPathBeanDefinitionScanner类的registerBeanDefinition方法会将扫描到的Component注册到容器 **DefaultListableBeanFactory** 中，通过DefaultListableBeanFactory.registerBeanDefinition方法 
+    6. 以上过程都发生在**AbstractApplicationContext**的**refresh**方法的**obtainFreshBeanFactory**中
+        ```
+            prepareRefresh();
+            
+            // Tell the subclass to refresh the internal bean factory.
+            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+    
+            // Prepare the bean factory for use in this context.
+            prepareBeanFactory(beanFactory);
+    
+            try {
+                // Allows post-processing of the bean factory in context subclasses.
+                postProcessBeanFactory(beanFactory);
+    
+                // Invoke factory processors registered as beans in the context.
+                invokeBeanFactoryPostProcessors(beanFactory);
+    
+                // Register bean processors that intercept bean creation.
+                registerBeanPostProcessors(beanFactory);
+    
+                // Initialize message source for this context.
+                initMessageSource();
+    
+                // Initialize event multicaster for this context.
+                initApplicationEventMulticaster();
+    
+                // Initialize other special beans in specific context subclasses.
+                onRefresh();
+    
+                // Check for listener beans and register them.
+                registerListeners();
+    
+                // Instantiate all remaining (non-lazy-init) singletons.
+                finishBeanFactoryInitialization(beanFactory);
+    
+                // Last step: publish corresponding event.
+                finishRefresh();
+            }
+        ```
     
  2. 功能开关相关Bean的注册过程
     1. 在上述代码里的registerBeanPostProcessors(beanFactory)中注册了所有的BeanProcessor，因此BeanProcessor优先于其他的Bean加载
