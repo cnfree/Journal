@@ -104,7 +104,7 @@
  
     4. Spring AOP里的AbstractAutoProxyCreator类结构
     
-        ![AbstractAutoProxyCreator][AbstractAutoProxyCreator]
+    >    ![AbstractAutoProxyCreator][AbstractAutoProxyCreator]
  
     5. 在BeanProcessor之后的所有Bean实例化过程中都要被所有的BeanProcessor处理，参见类AbstractAutowireCapableBeanFactory
          ```
