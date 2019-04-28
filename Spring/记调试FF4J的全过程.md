@@ -340,7 +340,7 @@
         3. 目标对象：含有@Flip注解的接口的主实现Bean
     2. 调用@Flip注解方法，走的是JdkDynamicAopProxy代理invoke方法，在里面创建了一个ReflectiveMethodInvocation对象代理执行。
     3. ReflectiveMethodInvocation通过责任链模式来调用拦截器，这个模式基本是Spring各模块拦截器实现的标配了。 
-       > ReflectiveMethodInvocation结构 
+    4. ReflectiveMethodInvocation结构 
         ![ReflectiveMethodInvocation][ReflectiveMethodInvocation]
         ```
             public Object proceed() throws Throwable {
@@ -373,7 +373,7 @@
         	}
 
         ```
-    4. FeatureAdvisor此时隆重登场，它的作用就是判断功能开关是否开启，如果开启并且当前Bean不是注解上的alterBean，执行alterBean，否则调用ReflectiveMethodInvocation的proceed方法
+    5. FeatureAdvisor此时隆重登场，它的作用就是判断功能开关是否开启，如果开启并且当前Bean不是注解上的alterBean，执行alterBean，否则调用ReflectiveMethodInvocation的proceed方法
         ```
             public Object invoke(final MethodInvocation mi) throws Throwable {
                  Flip ff4jAnnotation = getFF4jAnnotation(mi);
@@ -415,8 +415,8 @@
              }
 
         ```
-    5. 如果功能开关开启，会调用FeatureAdvisor.invoke两次，第一次执行PrimaryBean代理，第二次执行alterBean代理，因此会判断功能开关两次
-    6. ReflectiveMethodInvocation.proceed()每被拦截器调用一次，拦截器计数减一。当计数为-1时，执行真正的目标对象方法
+    6. 如果功能开关开启，会调用FeatureAdvisor.invoke两次，第一次执行PrimaryBean代理，第二次执行alterBean代理，因此会判断功能开关两次
+    7. ReflectiveMethodInvocation.proceed()每被拦截器调用一次，拦截器计数减一。当计数为-1时，执行真正的目标对象方法
         ```
             /**
              * Invoke the joinpoint using reflection.
@@ -428,7 +428,7 @@
                 return AopUtils.invokeJoinpointUsingReflection(this.target, this.method, this.arguments);
             }
         ```
-    7. 至此调用@Flip注解方法整个过程结束。
+    8. 至此调用@Flip注解方法整个过程结束。
  
  
  [AbstractAutoProxyCreator]:img/AbstractAutoProxyCreator.png
