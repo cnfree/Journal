@@ -47,7 +47,7 @@
  1. 功能开关相关Bean的扫描解析过程
     1. Spring初始化的时候会扫描org.ff4j.aop包，具体是在ClassPathBeanDefinitionScanner类的doScan(String... basePackages)方法
     2. ClassPathScanningCandidateComponentProvider的findCandidateComponents(String basePackage)方法扫描ClassPath下的org.ff4j.aop包
-    3. 扫描实现是使用API ClassLoader.getResources("org.ff4j.aop)，在PathMatchingResourcePatternResolver类的doFindAllClassPathResources(String path)方法中
+    3. 扫描实现是使用API **ClassLoader.getResources("org.ff4j.aop)**，在PathMatchingResourcePatternResolver类的doFindAllClassPathResources(String path)方法中
     4. ClassPathScanningCandidateComponentProvider的isCandidateComponent方法检测类是否包含了 **@Component** 注解
     5. ClassPathBeanDefinitionScanner类的registerBeanDefinition方法会将扫描到的Component注册到容器 **DefaultListableBeanFactory** 中，通过DefaultListableBeanFactory.registerBeanDefinition方法 
     6. 以上过程都发生在**AbstractApplicationContext**的**refresh**方法的**obtainFreshBeanFactory**中
@@ -104,7 +104,8 @@
  
     4. Spring AOP里的AbstractAutoProxyCreator类结构
     
-    >    ![AbstractAutoProxyCreator][AbstractAutoProxyCreator]
+        
+        ![AbstractAutoProxyCreator][AbstractAutoProxyCreator]
  
     5. 在BeanProcessor之后的所有Bean实例化过程中都要被所有的BeanProcessor处理，参见类AbstractAutowireCapableBeanFactory
          ```
