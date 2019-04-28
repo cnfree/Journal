@@ -296,6 +296,7 @@
                 return proxyFactory.getProxy(getProxyClassLoader());
             }
         ```
+    
     11. ProxyFactory实际上是AopProxyFactory的代理，创建代理实际上是通过AopProxyFactory完成的
     
         ```
@@ -321,6 +322,7 @@
         ```
  
     12. 代理有两种，一种是JdkDynamicAopProxy，一种是ObjenesisCglibAopProxy，不管哪种，都持有AdvisedSupport，这个AdvisedSupport就是之前提到的ProxyFactory，它继承了AdvisedSupport，而ProxyFactory又持有Advisor(持有拦截器)和需要被代理的对象实例，因此两种代理就这样关联到拦截器和对象实例了。
+    
     13. JdkDynamicAopProxy实现了JDK的动态代理接口InvocationHandler，同时也实现了AopProxy接口。AopProxy接口是用来创建代理对象的接口。
          ```
             public Object getProxy(ClassLoader classLoader) {
@@ -339,10 +341,15 @@
         1. 连接点JointPoint：被@Flip注解的方法
         2. 通知Advisor：FeatureAdvisor实现
         3. 目标对象：含有@Flip注解的接口的主实现Bean
+    
     2. 调用@Flip注解方法，走的是JdkDynamicAopProxy代理invoke方法，在里面创建了一个ReflectiveMethodInvocation对象代理执行。
+    
     3. ReflectiveMethodInvocation通过责任链模式来调用拦截器，这个模式基本是Spring各模块拦截器实现的标配了。 
+    
     4. ReflectiveMethodInvocation结构 
+    
         ![ReflectiveMethodInvocation][ReflectiveMethodInvocation]
+    
         ```
             public Object proceed() throws Throwable {
         		//	We start with an index of -1 and increment early.
@@ -374,6 +381,7 @@
         	}
 
         ```
+    
     5. FeatureAdvisor此时隆重登场，它的作用就是判断功能开关是否开启，如果开启并且当前Bean不是注解上的alterBean，执行alterBean，否则调用ReflectiveMethodInvocation的proceed方法
         ```
             public Object invoke(final MethodInvocation mi) throws Throwable {
@@ -416,7 +424,9 @@
              }
 
         ```
+    
     6. 如果功能开关开启，会调用FeatureAdvisor.invoke两次，第一次执行PrimaryBean代理，第二次执行alterBean代理，因此会判断功能开关两次
+    
     7. ReflectiveMethodInvocation.proceed()每被拦截器调用一次，拦截器计数减一。当计数为-1时，执行真正的目标对象方法
         ```
             /**
@@ -429,6 +439,7 @@
                 return AopUtils.invokeJoinpointUsingReflection(this.target, this.method, this.arguments);
             }
         ```
+    
     8. 至此调用@Flip注解方法整个过程结束。
  
  
