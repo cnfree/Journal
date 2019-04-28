@@ -103,6 +103,7 @@
     3. AbstractAutoProxyCreator是Spring AOP实现的核心类，实现了代理创建的逻辑
  
     4. Spring AOP里的AbstractAutoProxyCreator类结构
+    
         ![AbstractAutoProxyCreator][AbstractAutoProxyCreator]
  
     5. 在BeanProcessor之后的所有Bean实例化过程中都要被所有的BeanProcessor处理，参见类AbstractAutowireCapableBeanFactory
