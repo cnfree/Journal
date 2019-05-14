@@ -12,8 +12,7 @@
     select where for update;   start transaction;
                                select where for update; 
     insert;
-    commit;
-                               insert; 
+    commit;                    insert; 
                                commit;
                                
     Session B 尝试获取插入意向锁，需要等待 Session A 的gap锁
