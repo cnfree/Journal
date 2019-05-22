@@ -1,6 +1,6 @@
 # Kafka的性能优化设计
 
-## OS PageCache
+## OS PageCache，避免GC
  * Kafka、Elasticsearch等系统虽然基于JVM运行，但都是重度依赖OS Cache来管理大量的数据。
  * 磁盘文件在写入之前会进入os cache，也就是操作系统管理的内存空间。
  * 消费数据是，也是优先从os cache(内存缓冲)里读取数据。
