@@ -18,8 +18,8 @@
  ![Kafka客户端][Kafka客户端]
 
 ## CopyOnWriteMap
- * 不同于读写锁，**读写锁是读写互斥**，而CopyOnWrite是空间换时间，复制一份数据进行写操作，而不会影响读操作，**解决了高并发下的读写互斥问题*8，适用于读多写少的操作。
- * 类似的有Mysql InnoDB MVCC 的快照读，根据时间点开辟一个内存空间用来读取数据，大大提升Mysql的查询性能。
+ * 不同于读写锁，**读写锁是读写互斥**，而CopyOnWrite是空间换时间，复制一份数据进行写操作，而不会影响读操作，**解决了高并发下的读写互斥问题**，适用于读多写少的操作。
+ * 类似的有Mysql InnoDB MVCC 的**快照读**，根据时间点开辟一个内存空间用来读取数据，大大提升Mysql的查询性能。
  * Java的CopyOnWriteArrayList也是基于CopyOnWrite思想，利用高并发往往是读多写少的特性，对读操作不加锁，对写操作，先复制一份新的集合，在新的集合上面修改，然后将新集合赋值给旧的引用，并通过volatile 保证其可见性，当然写操作的锁是必不可少的了。
 
 ## Sequence I/O
@@ -43,10 +43,10 @@
     
  * 整个过程共经历两次Context Switch，四次System Call。同一份数据在内核Buffer与用户Buffer之间重复拷贝，效率低下。  
  * 其中2、3两步没有必要，完全可以直接在内核区完成数据拷贝。
- * 采用操作系统高级函数sendfile进行传输，可以避免2、3两步的拷贝
+ * 采用操作系统高级函数**sendfile**进行传输，可以避免2、3两步的拷贝
     ![采用sendfile方式传输][采用sendfile方式传输]
  * IBM 零拷贝技术文章: [Efficient data transfer through zero copy][1] 
- * FileChannel有一个transferTo方法，底层实现了操作系统的sendfile函数
+ * FileChannel有一个**transferTo**方法，底层实现了操作系统的sendfile函数
    ```
      public void transferTo(long position, long count, WritableByteChannel target);
      
@@ -65,6 +65,8 @@
     |  350MB	|3631	                  |1762            |
     |  700MB	|13498	                  |4422            | 
     |  1GB	    |18399	                  |8537            |
+
+
 
 [Kafka客户端]:img/Kafka客户端.png
 [传统网络传输方式]:img/traditional_transfer.jpg
