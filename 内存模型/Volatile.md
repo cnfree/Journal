@@ -1,6 +1,6 @@
-# volatile
+# Volatile
 
-## [volatile的官方专业解释][1]
+## [Volatile的官方专业解释][1]
 
  * Volatile Loads 等价 MonitorEnter
  * Volatile Stores 等价 MonitorExit
