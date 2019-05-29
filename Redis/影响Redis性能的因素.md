@@ -25,5 +25,7 @@
 
   使用高端配置时，客户端连接数也是一个非常重要的因素。基于epoll/kqueue模型，Redis事件循环伸缩性非常好。当Redis超过60000个连接时，仍然能够稳定在50000q/s的吞吐量。根据经验，一个实例，30000个连接时的可用吞吐量只有100个连接时的一半。
 
+# [关于redis性能问题分析和优化][2]
 
 [1]: https://redis.io/topics/benchmarks
+[2]: https://www.cnblogs.com/chenpingzhao/p/6859041.html
