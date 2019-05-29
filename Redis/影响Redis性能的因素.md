@@ -30,6 +30,55 @@
   * 倘若当前实例延迟很明显，那么使用管道去降低延迟是非常有效的。
   * 避免操作大集合的慢命令：如果命令处理频率过低导致延迟时间增加，这可能是因为使用了高时间复杂度的命令操作导致，这意味着每个命令从集合中获取数据的时间增大。
   * 尽量使用O(1)的命令。 
+  
+## [Redis延迟问题解决][3]  
+  * AOF + fsync every second + no-appendfsync-on-rewrite option set to yes: this is as the above, but avoids to fsync during rewrites to lower the disk pressure.
+  
+    AOF + fsync every second，每秒写磁盘一次，no-appendfsync-on-rewrite=yes，AOF写磁盘未完成时，阻塞set命令，防止AOF数据丢失。
+
+  * 延迟测试，执行 
+    ```
+    redis-cli --latency -h `host` -p `port`
+    ```    
+    
+  * Prefer to use aggregated commands (MSET/MGET), or commands with variadic parameters (if possible) over pipelining.
+    
+    推荐使用聚合指令(MSET/MGET)，或者基于pipelining的可变参数指令。
+    
+  * Prefer to use pipelining (if possible) over sequence of roundtrips.
+  
+    推荐使用pipelining提交指令序列。
+  
+  * Redis supports Lua server-side scripting to cover cases that are not suitable for raw pipelining (for instance when the result of a command is an input for the following commands).  
+  
+    某些不适合pipelining的场景，Redis支持服务端Lua脚本，比如后续指令的输入依赖前面指令的运行结果。
+    
+  * Please note vanilla Redis is not really suitable to be bound on a single CPU core. Redis can fork background tasks that can be extremely CPU consuming like bgsave or AOF rewrite. These tasks must never run on the same core as the main event loop.  
+  
+    Redis不适合运行在单核CPU上，当执行bgsave或者AOF rewrite时，Redis会fork一个后台任务，需要消费cpu，这些任务不能运行在main event loop相同的核上。
+    
+  * Multiplexing，IO多路复用，单线程处理多个请求。
+  
+  * 一般常用的指令都很快，但是有一些慢指令会影响请求性能，比如**SORT, LREM, SUNION**等。**KEYS**指令会非常慢，迭代访问KEYS或者集合请采用**SCAN, SSCAN, HSCAN, ZSCAN**指令。
+  
+  * **SLOWLOG GET N** 可以访问最近N个慢指令。
+  
+  * redis.conf里配置 slowlog-log-slower-than(微秒) 和 slowlog-max-len 来记录慢指令。
+  
+  * **disable transparent huge pages**，很少几个指令会影响几千个page，进而导致读写所有内存，导致巨大的延迟
+    ```
+    echo never > /sys/kernel/mm/transparent_hugepage/enabled
+    ```
+  * 避免使用交换分区，如果内存不够用了，请加大内存
+  
+  * 过期导致延迟
+    
+    * Redis有两种过期处理策略
+        * Lazy way，当请求一个Key时，检查是否过期并进行处理
+        * Active way，每100毫秒处理少量过期的key(ACTIVE_EXPIRE_CYCLE_LOOKUPS_PER_LOOP，缺省值20，即每秒处理200个过期的Key)
+    
+    * 如果超过25%的Key被发现过期， 则会循环处理过期的Key，如果同一时间有大量的Key过期，超过了25%，会堵塞Redis。所以需要注意**EXPIREAT**指令。
 
 [1]: https://redis.io/topics/benchmarks
 [2]: https://www.cnblogs.com/chenpingzhao/p/6859041.html
+[3]: https://redis.io/topics/latency
