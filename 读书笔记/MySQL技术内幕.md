@@ -20,4 +20,9 @@
   * Memory 只支持表锁，并发性较差，**不支持TEXT和BLOB类型**。VARCHAR类型按照CHAR存储。
   * 中间结果集产生的**临时表采用Memory引擎**，但如果包含TEXT和BLOB类型，会转换为MyISAM而损失性能。
   * Archive 引擎**只支持INSERT和SELECT**操作。会对数据进行压缩，压缩比1:10，**非常适合存储归档数据**。
+  * ETL操作，MyISAM性能好，OLTP环境，InnoDB性能更好。
+  * 不同存储引擎特性比较
+  ![不同引擎特性比较][dbengine]
+  
+  [dbengine]: img/dbengine.png 
   
