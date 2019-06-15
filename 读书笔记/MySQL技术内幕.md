@@ -78,7 +78,47 @@
   * innodb_flush_log_at_trx_commit **设为1，每当有事务提交时，必须确保事务都已写入重做日志文件**
   * 二进制文件支持**STATEMENT（逻辑SQL）、ROW(表的行更改，建议采用该模式)、MIX**三种格式
   
+## 第四章
+  * 如果没有定义主键，则查找是否有非NULL唯一索引，有则为主键，否则创建6字节大小指针作为主键
+  * 所有数据存放在表空间中，表空间又由段，区，页组成
+  * InnoDB 逻辑存储结构
+  ![InnoDB 逻辑存储结构][innodb_structure]
+  * 如果启用innodb_file_per_table，每张表内的数据可以单独存放在一个表空间内，但是只包含数据、索引和插入缓冲
+  * B+树的叶子节点为数据段，非叶子节点为索引段
+  * 区由连续的页组成，默认的页大小为16K，可以通过innodb_page_size设置
+  * 不论页怎么设置，区大小均为1M
+  * 每页最多存放16K/2 - 200行数据，即7992行记录
+  * NULL除了占有NULL标志位，实际存储不占任何空间
+  * 每行数据有两个隐藏列，事务ID列和回滚指针列，分别为6字节和7字节，如果未定义主键列，还会增加6字节rowid列
+  * VARCHAR类型最大为65532字节
+  * VARCHAR(N) 中的N为字符的长度，而不是字节的长度
+  * InnoDB默认的页为16K，16384字节，当发生行溢出，存放在Uncompress BLOB页
+  * 行溢出数据的存储
+  ![行溢出出具存储结构]
+  * 每个页至少存放两条数据，如果一个页只能存放一条数据，则自动将行数据放到溢出页
+  * 如果一个页可以放两条以上的数据，VARCHAR类型数据不会放到BLOB页
+  * VARCHAR阈值长度8908，不会放入到BLOB页
+  * BLOB/TEXT如果在一个页如果能存放2条数据，不会放到BLOB Page
+  * CHAR(N)的N指的是字符长度，不是字节长度
+  * 在不同的字符集下，CHAR可能不是定长数据
+  * 对于多字符集编码，CHAR不是定长数据，而是变长数据，和VARCHAR没有实际区别
+  * InnoDB数据页结构
+  ![InnoDB数据页结构]
+  
+
+
+
+
+
+
+
+
+
+
+
   
   [dbengine]: img/dbengine.png 
   [dbobject]: img/dbobject.png
-  
+  [innodb_structure]: img/innodb_structure.png
+  [行溢出出具存储结构]: img/行溢出数据存储结构.png
+  [InnoDB数据页结构]: img/InnoDB数据页结构.png
