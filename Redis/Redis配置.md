@@ -37,10 +37,30 @@
   * pong: 返回ping和meet，包含自己的状态和其他信息，也可以用于信息广播和更新。
   * fail: 某个节点判断另一个节点fail之后，就发送fail给其他节点，通知其他节点，指定的节点宕机了。
 
+* Asynchronous AOF fsync is taking too long
+  * 本地IO较大使用造成的
+  * 通过命令 tsar --io -n 2 | head -200 查看IO状态
+  
+* auto-aof-rewrite-percentage 100
+  * 当前写入日志文件的大小超过上一次rewrite之后的文件大小的百分之100时就是2倍时触发Rewrite
+  * rewrite之后aof文件会保存keys的最后的状态，清除掉之前冗余的，来缩小这个文件
+  * aof文件的大小超过基准百分之多少后触发bgrewriteaof
 
+* auto_aofrewrite_min_size
+  * 当前aof文件大于多少字节后才触发。避免在aof较小的时候无谓行为。默认大小为64mb
+    
+* appendfsync 同步频率
+  * always    
+    * 每个 Redis 命令都要同步写入硬盘。这样会严重降低 Redis 的性能
+  * everysec  
+    * 每秒执行一次同步，显式地将多个写命令同步到硬盘
+  * no        
+    * 让操作系统来决定应该何时进行同步
 
 # 参考文章
  * [redis-cluster核心原理分析：gossip通信、jedis smart定位、主备切换][1]
+ * [Redis Cluster:Too many Cluster redirections异常][2]
  
  
-[1]: https://blog.csdn.net/A_BlackMoon/article/details/85345645 
+[1]: https://blog.csdn.net/A_BlackMoon/article/details/85345645
+[2]: https://carlosfu.iteye.com/blog/2251034 
