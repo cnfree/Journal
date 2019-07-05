@@ -269,4 +269,24 @@
    * Producer端使用zookeeper用来"发现"broker列表,以及和Topic下每个partition leader建立socket连接并发送消息.
    * Broker端使用zookeeper用来注册broker信息,以及监测partition leader存活性.
    * Consumer端使用zookeeper用来注册consumer信息,其中包括consumer消费的partition列表等,同时也用来发现broker列表,并和partition leader建立socket连接,并获取消息.
+ 
+ * Kafka不具备什么 
+   * 不能进行broker组网 
+   * 没有Queue的概念 
+   * 不会缓存消息==>消息永远都是进磁盘的  
    
+ * Kafka可以批量生产消息，比如：每批50个消息的发送频率，几乎可以占满1Gbps的带宽。 其他MQ不具备此功能。
+ 
+ * Kafka不需要消息的应答，对很多类型的日志数据系统，其追求用吞吐量来替代持久化，只要丢失的消息数量相对小就可以。 
+ 
+ * broker删除消息，是通过基于时间的策略来出来的，比如7天，因为broker不知道消息是否被消费。实际上，消费者都是按日、小时或者实时的消费消息的。另外，长期保留数据不会降低Kafka的性能。   
+ 
+ * 消费者组中的消费者可以共同消费一组主题上的消息，并且同一个消息仅会被消费者组中的某一个消费者消费。消费者组和消费者组之间是相互独立的。 
+ 
+ * 消费者组中的消费者可以在不同的进程或者主机上。 
+ 
+ * 消息的状态是记录在消费端而不是在broker上，因为broker是无状态的（比如：每个消费者消费了多少消息不是记录在broker上，而是记录在consumer上）。 
+ 
+ * flush消息的时机：为提高性能，flush的次数尽量少，选择一个生产者发布完配置的消息数时，而不是每个消息发布完后都flush一次。或者过多少时间后，flush一次，只有flush后，消息才会被消费者消费。 
+ 
+ * consumer pull message，不是broker push消息给消费者，这样做的另一个特点是，消费者可以绕过当前偏移位的消息，去消费其他偏移位上的消息。和传统的方式不一样。 
