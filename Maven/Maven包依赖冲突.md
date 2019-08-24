@@ -55,13 +55,13 @@
 
 从图上可以看到：
 
-* 包含 version managed from 的，是来自parent dependencyManagement里的配置(**版本锁定原则**)
+* 包含 **_version managed from_** 的，是来自parent dependencyManagement里的配置(**版本锁定原则**)
     * 第三方包里定义的version都不会被采用，比如自定义spring boot starter的version
     * **dependencyManagement 父亲的优先级最高**，因此如果采用了BOM管理方式，继承了spring boot bom，都将依赖于spring-boot-dependencies,里面包含了所有常用的jar版本信息，可能会非常旧
     * **无法在自定义spring boot starter中覆盖spring-boot-dependencies中的版本信息**
     * 如果要覆盖父dependencyManagement的版本信息，需要在parent bom里非dependencyManagement段的dependencies直接指定版本进行覆盖
-* 包含 omitted for conflict with 的，代表着版本冲突，需要使用exclusion标签将冲突的jar排除
-* 包含 omitted for duplicate 的，代表着重复依赖   
+* 包含 **_omitted for conflict with_** 的，代表着版本冲突，需要使用exclusion标签将冲突的jar排除
+* 包含 **_omitted for duplicate_** 的，代表着重复依赖   
 
 
 最让人疑惑的就是版本锁定原则，会发现无论怎么定义版本号，package的时候使用的都是 root dependencyManagement 里的版本配置
