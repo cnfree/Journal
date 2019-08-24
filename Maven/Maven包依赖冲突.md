@@ -64,7 +64,7 @@
 * 包含 **_omitted for duplicate_** 的，代表着重复依赖   
 
 
-最让人疑惑的就是版本锁定原则，会发现无论怎么定义版本号，package的时候使用的都是 root dependencyManagement 里的版本配置
+最容易让人疑惑的就是版本锁定原则，会发现无论怎么定义版本号，package的时候使用的都是 root dependencyManagement 里的版本配置
 
 ## 如何方便的查看版本依赖冲突
   * Eclipse的Dependency Hierarchy看起来很方便，一目了然
