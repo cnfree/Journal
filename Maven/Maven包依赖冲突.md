@@ -1,6 +1,6 @@
 # Maven包依赖冲突 
 
-# Maven的依赖原则
+## Maven的依赖原则
   * 第一声明优先原则：
      
      在pom.xml配置文件中，如果有两个名称相同版本不同的依赖声明，那么先写的会生效。所以，先声明自己要用的版本的jar包即可。
@@ -48,7 +48,7 @@
             </dependencies>
         </dependencyManagement>
       ```
-# Maven包依赖查看命令
+## Maven包依赖查看命令
 **_mvn dependency:tree -Dverbose_**
 
   ![依赖冲突]
@@ -66,7 +66,7 @@
 
 最让人疑惑的就是版本锁定原则，会发现无论怎么定义版本号，package的时候使用的都是 root dependencyManagement 里的版本配置
 
-# 如何方便的查看版本依赖冲突
+## 如何方便的查看版本依赖冲突
   * Eclipse的Dependency Hierarchy看起来很方便，一目了然
   * Idea需要安装插件Maven Helper，可以快速查看冲突jar包，但是缺少冲突原因分析，无法定位是如何造成冲突的，没有eclipse方便
 
