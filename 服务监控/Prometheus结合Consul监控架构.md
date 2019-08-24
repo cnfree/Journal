@@ -8,17 +8,17 @@
 
   参见 [Prometheus configuration consul_sd 章节][consul_sd]
   
-  * __meta_consul_address: the address of the target
-  * __meta_consul_dc: the datacenter name for the target
-  * __meta_consul_tagged_address_<key>: each node tagged address key value of the target
-  * __meta_consul_metadata_<key>: each node metadata key value of the target
-  * __meta_consul_node: the node name defined for the target
-  * __meta_consul_service_address: the service address of the target
-  * __meta_consul_service_id: the service ID of the target
-  * __meta_consul_service_metadata_<key>: each service metadata key value of the target
-  * __meta_consul_service_port: the service port of the target
-  * __meta_consul_service: the name of the service the target belongs to
-  * __meta_consul_tags: the list of tags of the target joined by the tag separator
+  * ___meta_consul_address_: the address of the target
+  * ___meta_consul_dc_: the datacenter name for the target
+  * ___meta_consul_tagged_address\_\<key>_: each node tagged address key value of the target
+  * ___meta_consul_metadata\_\<key>_: each node metadata key value of the target
+  * ___meta_consul_node_: the node name defined for the target
+  * ___meta_consul_service_address_: the service address of the target
+  * ___meta_consul_service_id_: the service ID of the target
+  * ___meta_consul_service_metadata\_\<key>_: each service metadata key value of the target
+  * ___meta_consul_service_port_: the service port of the target
+  * ___meta_consul_service_: the name of the service the target belongs to
+  * ___meta_consul_tags_: the list of tags of the target joined by the tag separator
  
   
   [prometheus_consul]: img/prometheus_consul.webp
