@@ -48,9 +48,11 @@
             replacement: 127.0.0.1:9115
   ```  
   意思是：
+  ```  
   __param_target = __address__ , instance = __param_target ,__address__ = 127.0.0.1:9115
-  
-  * separator: 如果有多个source_label([_address__,jod])的时候用separator去连接几个值
+  ```  
+    
+  * separator: 如果有多个source_label([\_\_address\_\_,jod])的时候用separator去连接几个值
   * regex: 符合这个正则表达式的source_label会被赋值给replacement再赋值给target_label
   * replacement: 取匹配了正则表达式的第几串字符串
   
