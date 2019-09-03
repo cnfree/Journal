@@ -122,13 +122,36 @@
   7. Web UI
      * 除了收集器设计的原则之外，UI也是SkyWalking中的另一个核心部分。它基于React、Antd和Zuul代理来提供收集器集群发现、查询分派和可视化。
      * Web UI使用localhost:10800来为收集器集群做命名查询。
+     
+## 协议
   
+  * Trace Data Protocol是skywalking中描述探针与后端数据通信的数据协议。协议描写了探针上行、下行数据格式，可用于客户自定义探针使用，其中：
+    * 服务发现功能只提供HTTP上报格式
+    * 其他服务，例如注册，Trace等，提供HTTP/JSON和gRPC两种上报接口。
+    * 协议文档：https://github.com/apache/skywalking/blob/master/docs/en/protocols/Trace-Data-Protocol-v2.md
+  
+  * Skywalking Cross Process Propagation Headers Protocol
+    * Skywalking是一个偏向APM的分布式追踪系统，所以，为了提供服务端处理性能。头信息会比其他的追踪系统要更复杂一些。 你会发现，这个头信息，更像一个商业APM系统。
+    * 协议文档：https://github.com/apache/skywalking/blob/master/docs/en/protocols/Skywalking-Cross-Process-Propagation-Headers-Protocol-v2.md      
+  
+## 命名空间 
+  SkyWalking是一个用于从分布式系统收集指标的监控工具。在实际环境中，一个非常大的分布式系统包括数百个应用程序，数千个应用程序实例。在这种情况下，更大可能的不止一个组，甚至还有一家公司正在维护和监控分布式系统。他们每个人都负责不同的部分，不能共享某些指标。
 
-  
-  
+  在这种情况下,命名空间就应运而生了,它用来隔离追踪和监控数据。
+
+  **当双方使用不同的名称空间时，跨进程传播链会中断。**
+
+  在探针配置中配置 agent.namespace
+  ```properties
+   agent.namespace=default-namespace
+  ```
+
+## 数据采集  
+ ![数据采集]
   
   
        
 [Skywalking]:img/Skywalking.png
 [Agent]:img/Agent.png
 [collector]:img/collector.jpg
+[数据采集]:img/数据采集.png
