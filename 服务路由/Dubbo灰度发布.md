@@ -9,7 +9,7 @@
    
    当一个接口的实现，出现不兼容升级时，可以用版本号过渡，版本号不同的服务相互间不引用
       
-   ```
+   ```xml
     <!-- 机器A提供1.0.0版本服务 --> 
     <dubbo:service interface="com.foo.BarService" version="1.0.0" />
     <!-- 机器B提供2.0.0版本服务 --> 
@@ -21,13 +21,13 @@
    ```
 
    此外，消费者消费服任意版本的服务时：
-   ```
+   ```xml
    <dubbo:reference id="barService" interface="com.foo.BarService" version="*" />
    ```
 ## group
 
   当一个接口有多种实现时，可以用group区分
-  ```
+  ```xml
     <!-- dubbo group 使用示例 --> 
     <bean id="demoA" class="com.xxx.IndexServiceImpl1" /> 
     <dubbo:service group="feedback" interface="com.xxx.IndexService" ref="demoA" /> 
@@ -36,7 +36,7 @@
   ```
 
   此外，dubbo消费者也可以设置为：消费任意一个group的服务。
-  ```
+  ```xml
   <dubbo:reference id="barService" interface="com.foo.BarService" group="*" />
   ```
 
@@ -54,11 +54,11 @@ Version方式和Group方式都不适合灰度发布，因为需要修改代码�
 
   1. 创建自定义负载类，继承AbstractLoadBalance，重写doSelect方法，这个方法就是定义算法规则的地方。
   2. 添加dubbo负载扩展点，在src/main/resources目录下创建META-INFO/dubbo目录，在目录下创建org.apache.dubbo.rpc.cluster.LoadBalance文件，里面配置对应的负载算法类，如下：
-     ```
+     ```properties
      gray=com.dalaoyang.balance.GrayLoadBalance
      ```
   3. 配置文件中使用，如下：
-     ```
+     ```properties
      dubbo.provider.loadbalance=gray
      ```
 
