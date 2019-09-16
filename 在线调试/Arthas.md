@@ -7,7 +7,7 @@
   * **arthas-boot.jar**和**as.sh**
     * 两个模块功能类似，分别使用java和shell脚本，下载对应的jar包，并生成服务端和客户端的启动命令，然后启动客户端和服务端。
     * 服务端最终生成的启动命令如下：
-      ```shell
+      ```bash
       ${JAVA_HOME}"/bin/java \
          ${opts}  \
          -jar "${arthas_lib_dir}/arthas-core.jar" \
@@ -19,7 +19,7 @@
              -agent "${arthas_lib_dir}/arthas-agent.jar"     arthas-agent目录
       ```
   * **arthas-core.jar**
-     * 是服务端程序的**启动入口类**，会调用virtualMachine#attach到目标进程，并加载arthas-agent.jar作为agent jar包。
+     * 是服务端程序的**启动入口**，会调用virtualMachine#attach到目标进程，并加载arthas-agent.jar作为agent jar包。
   * **arthas-agent.jar**
      * 既可以使用**premain**方式（在目标进程启动之前，通过-agent参数静态指定），也可以通过**agentmain**方式（在进程启动之后**attach**上去）。
      * arthas-agent会使用自定义的classloader(ArthasClassLoader)加载arthas-core.jar里面的com.taobao.arthas.core.config.Configure类以及com.taobao.arthas.core.server.ArthasBootstrap。
@@ -42,6 +42,13 @@
  * [Web Console]
  * [Tunnel Server]
  * 暂不支持复制粘贴，仍然只是一个半成品
+
+ ## 使用方法
+   * 下载arthas
+     ```bash
+     curl -L https://alibaba.github.io/arthas/install.sh | sh
+     ```
+   * 执行 ./as.sh
 
  ## 参考资料
    * [arthas源码分析]
