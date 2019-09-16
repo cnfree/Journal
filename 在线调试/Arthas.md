@@ -1,6 +1,6 @@
 # Arthas
 
-# Arthas 组成模块
+ ## Arthas 组成模块
 
 ![arthas]
 
@@ -32,8 +32,13 @@
      * 一般由arthas-boot.jar和as.sh来负责启动。
 
 
+ ## 需要注意的地方
+ * **_使用exit或者quit命令只会退出交互界面，不会关闭attach的arthas进程。_**
+ * 如果需要重连，或者采用web console，需要连接tunnel server时，需要先shutdown，否则不会成功。
+
  ## 参考资料
    * [arthas源码分析]
+   * [JVM进程诊断利器——arthas介绍]
 
 
 
@@ -44,3 +49,4 @@
 
 [arthas]: img/arthas.webp
 [arthas源码分析]: https://www.jianshu.com/p/4e34d0ab47d1
+[JVM进程诊断利器——arthas介绍]:https://www.jianshu.com/p/76d9a81ede7e
