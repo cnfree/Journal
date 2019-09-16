@@ -41,6 +41,7 @@
  * 工作原理: **browser <-> arthas tunnel server <-> arthas tunnel client <-> arthas agent**
  * [Web Console]
  * [Tunnel Server]
+ * 暂不支持复制粘贴，仍然只是一个半成品
 
  ## 参考资料
    * [arthas源码分析]
