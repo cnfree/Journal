@@ -50,6 +50,17 @@
      ```
    * 执行 ./as.sh
 
+ ## ognl 表达式使用
+   * 执行多行表达式，赋值给临时变量，返回一个List：
+     ```shell
+      $ ognl '#value1=@System@getProperty("java.home"), #value2=@System@getProperty("java.runtime.name"), {#value1, #value2}'
+      @ArrayList[
+          @String[/opt/java/8.0.181-zulu/jre],
+          @String[OpenJDK Runtime Environment],
+      ]
+     ```
+
+
  ## 参考资料
    * [arthas源码分析]
    * [JVM进程诊断利器——arthas介绍]
