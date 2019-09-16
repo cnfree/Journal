@@ -36,6 +36,12 @@
  * **_使用exit或者quit命令只会退出交互界面，不会关闭attach的arthas进程。_**
  * 如果需要重连，或者采用web console，需要连接tunnel server时，需要先shutdown，否则不会成功。
 
+ ## WEB Console
+ * Tunnel server/client use websocket protocol.
+ * 工作原理: **browser <-> arthas tunnel server <-> arthas tunnel client <-> arthas agent**
+ * [Web Console]
+ * [Tunnel Server]
+
  ## 参考资料
    * [arthas源码分析]
    * [JVM进程诊断利器——arthas介绍]
@@ -50,3 +56,5 @@
 [arthas]: img/arthas.webp
 [arthas源码分析]: https://www.jianshu.com/p/4e34d0ab47d1
 [JVM进程诊断利器——arthas介绍]:https://www.jianshu.com/p/76d9a81ede7e
+[Web Console]:https://alibaba.github.io/arthas/web-console.html
+[Tunnel Server]:https://github.com/alibaba/arthas/blob/master/tunnel-server/README.md
