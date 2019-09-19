@@ -59,8 +59,8 @@
 
 
 [cache]:img/cache.png
-[cache1]:img/cache.png
-[cache2]:img/cache.png
+[cache1]:img/cache1.png
+[cache2]:img/cache2.png
 [为什么Caffeine比Guava好？]: https://blog.csdn.net/qq_33330687/article/details/88857030
 [深入解密比Guava Cache更优秀的缓存-Caffein]: https://my.oschina.net/u/4072299/blog/3025253
 [guava和caffeine性能测试]: https://blog.csdn.net/hy245120020/article/details/78080686
