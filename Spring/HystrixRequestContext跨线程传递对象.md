@@ -21,10 +21,10 @@
 ## 解决方案
 1. 使用**TransmittableThreadLocal**
 ![TTL]
-2. 使用Spring Hystrix 的 HystrixRequestContext
+2. 使用Spring Hystrix 的 **HystrixRequestContext**
 
 ## HystrixRequestContext
-* HystrixRequestContext 表示 request level的context，用于存储 request level 的数据。与此相对的是 thread level的数据，一般用ThreadLocal来处理
+* HystrixRequestContext 表示request level的context，用于存储 request level 的数据。与此相对的是 thread level的数据，一般用ThreadLocal来处理
     ```java
     @Test
     public void test() throws InterruptedException {
