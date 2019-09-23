@@ -35,6 +35,7 @@
  * [disruptor-3.3.2源码解析(2)-队列]
  * [剖析Disruptor:为什么会这么快？（一）Ringbuffer的特别之处]
  * [Disruptor和ArrayBlockingQueue、LinkedBlockingQueue的比较]
+ * [循环缓冲区（RingBuffer）]
 
 
 [cacheline]:img/cacheline.webp
@@ -42,3 +43,4 @@
 [disruptor-3.3.2源码解析(2)-队列]:https://www.iteye.com/blog/brokendreams-2255707
 [剖析Disruptor:为什么会这么快？（一）Ringbuffer的特别之处]: http://www.ifeve.com/dissecting-disruptor-whats-so-special/
 [Disruptor和ArrayBlockingQueue、LinkedBlockingQueue的比较]: https://www.iteye.com/blog/lvlianghui-1836155
+[循环缓冲区（RingBuffer）]: https://www.jianshu.com/p/8499d9603544?from=timeline&isappinstalled=0
