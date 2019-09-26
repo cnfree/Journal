@@ -30,10 +30,13 @@
 ![route]
 
 ![direct]
+Direct类型，将消息中的RoutingKey与该Exchange关联的所有Binding中的BindingKey进行比较，如果相等，则发送到该Binding对应的Queue中。
 
 ![fanout]
+Fanout类型，将消息发送给所有与该  Exchange  定义过  Binding  的所有  Queues  中去，其实是一种广播行为。
 
 ![topic]
+Topic类型，按照正则表达式，对RoutingKey与BindingKey进行匹配，如果匹配成功，则发送到对应的Queue中。
 
 ## 持久化
  * 创建queue和exchange默认情况下都是没有持久化的,节点重启之后queue和exchange就会消失
