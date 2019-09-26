@@ -1,5 +1,48 @@
 # RabbitMQ 知识点
 
+## 基本概念
+* **Broker**：简单来说就是消息队列服务器实体。
+* **Exchange**：消息交换机，它指定消息按什么规则，路由到哪个队列。
+* **Queue**：消息队列载体，每个消息都会被投入到一个或多个队列。
+* **Binding**：绑定，它的作用就是把exchange和queue按照路由规则绑定起来。
+* **Routing Key**：路由关键字，exchange根据这个关键字进行消息投递。
+* **vhost**：虚拟主机，一个broker里可以开设多个vhost，用作不同用户的权限分离。
+* **producer**：消息生产者，就是投递消息的程序。
+* **consumer**：消息消费者，就是接受消息的程序。
+* **channel**：消息通道，在客户端的每个连接里，可建立多个channel，每个channel代表一个会话任务。
+
+消息队列的使用过程大概如下：
+
+ 1. 客户端连接到消息队列服务器，打开一个channel。
+ 2. 客户端声明一个exchange，并设置相关属性。
+ 3. 客户端声明一个queue，并设置相关属性。
+ 4. 客户端使用routing key，在exchange和queue之间建立好绑定关系。
+ 5. 客户端投递消息到exchange。
+
+## Exchanges, queues, and bindings
+![exchange]
+
+* **direct exchange**  routing key完全匹配才转发
+* **fanout exchange** 不理会routing key,消息直接**广播到所有绑定的queue**
+* **topic exchange**  对routing key模式匹配
+* header exchange       路由消息并不依赖routing key而是去匹配AMQP消息的header部分
+
+![route]
+
+![direct]
+
+![fanout]
+
+![topic]
+
+## 持久化
+ * 创建queue和exchange默认情况下都是没有持久化的,节点重启之后queue和exchange就会消失
+ * 需要特别指定queue和exchange的durable属性
+ * 消息持久化同时要求exchange和queue也是持久化的
+ * 消息的持久化需要在消息投递的时候设置delivery mode值为2
+ * 持久化的代价就是性能损失,磁盘IO远远慢于RAM(使用SSD会显著提高消息持久化的性能)
+ * 持久化会大大降低RabbitMQ每秒可处理的消息.两者的性能差距可能在10倍以上
+
 ## Connection 和 Channel
 ![connection&channel]
 
@@ -290,7 +333,8 @@
 ## 复合死信队列
 ![dlx]
 
-
+## 参考文章
+  * [RabbitMQ中 exchange、route、queue的关系]
 
 
 
@@ -299,3 +343,9 @@
   
 [connection&channel]: img/connection&channel.png
 [dlx]: img/dlx.png
+[exchange]:img/exchange.png
+[direct]:img/direct.png
+[fanout]:img/fanout.png
+[topic]:img/topic.png
+[route]:img/route.png
+[RabbitMQ中 exchange、route、queue的关系]: https://www.cnblogs.com/cnndevelop/p/9879288.html
