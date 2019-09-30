@@ -48,7 +48,11 @@ git log --all --full-history package-lock.json
 
   ![4]
 
-
+## 合并
+ * git merge -quiet <branch> 无声的合并（不会输出任何信息）
+ * git merge -ff <branch> 当合并是快进式合并的时候，仅仅是更新了分支的指针，不会产生合并提交，这也是默认的合并行为
+ * git merge -no-ff <branch> 即使是快进式合并，也会创建一个合并提交
+ * git merge -ff-only <branch> 只允许快进式合并
 
 [1]:img/1.png
 [2]:img/2.png
