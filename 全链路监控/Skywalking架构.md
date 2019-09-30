@@ -151,7 +151,6 @@
 
 ## 参考文档
 * [Skywalking容量规划]
-  b
        
 [Skywalking]:img/Skywalking.png
 [Agent]:img/Agent.png
