@@ -54,13 +54,49 @@ git log --all --full-history package-lock.json
  * git merge -no-ff <branch> 即使是快进式合并，也会创建一个合并提交
  * git merge -ff-only <branch> 只允许快进式合并
 
- -ff快进式合并
+  -ff快进式合并
 
- ![5]
+  ![5]
 
-  -no-ff非快进式合并
+   -no-ff非快进式合并
 
- ![6]
+  ![6]
+
+## git rebase 和 git merge
+
+ rebase会把你当前分支的 commit 放到公共分支的最后面,所以叫变基。就好像你从公共分支又重新拉出来这个分支一样。
+
+ 例子：如果你从 master 拉了个feature分支出来,然后你提交了几个 commit,这个时候刚好有人把他开发的东西合并到 master 了,这个时候 master 就比你拉分支的时候多了几个 commit,如果这个时候你 rebase master 的话，就会把你当前的几个 commit，放到那个人 commit 的后面。
+
+ ![7]
+
+ merge 会把公共分支和你当前的commit 合并在一起，形成一个新的 commit 提交
+
+ ![8]
+
+ * 不要在公共分支使用rebase
+ * 本地和远端对应同一条分支,优先使用rebase,而不是merge
+
+## squash
+如果不想在合并分支时体现多次commit记录, 可以增加squash参数
+* git merge --squash feature-1.0.0
+* git rebase -i dev
+  ```
+    pick 0483730 bar.txt 2222
+    pick adf4d92 bar.txt 3333
+    pick cd1b421 bar.txt 4444
+  ```
+  * 修改 pick 为 s
+  ```
+    pick 0483730 bar.txt 2222
+    s adf4d92 bar.txt 3333
+    s cd1b421 bar.txt 4444
+  ```
+  * 提交
+
+
+
+
 
 
 [1]:img/1.png
@@ -69,6 +105,8 @@ git log --all --full-history package-lock.json
 [4]:img/4.png
 [5]:img/5.png
 [6]:img/6.png
+[7]:img/7.webp
+[8]:img/8.webp
 
 
 
