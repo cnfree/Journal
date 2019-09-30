@@ -54,10 +54,21 @@ git log --all --full-history package-lock.json
  * git merge -no-ff <branch> 即使是快进式合并，也会创建一个合并提交
  * git merge -ff-only <branch> 只允许快进式合并
 
+ -ff快进式合并
+
+ ![5]
+
+  -no-ff非快进式合并
+
+ ![6]
+
+
 [1]:img/1.png
 [2]:img/2.png
 [3]:img/3.png
 [4]:img/4.png
+[5]:img/5.png
+[6]:img/6.png
 
 
 
