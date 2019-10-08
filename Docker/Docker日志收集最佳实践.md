@@ -1,6 +1,6 @@
 # Docker日志收集最佳实践
 
-在linux上，容器日志一般存放在**/var/lib/docker/containers/container_id/**下面
+在linux上，容器日志一般存放在**_/var/lib/docker/containers/container_id/_**下面
 
 # 查看容器的日志
 ```sh
