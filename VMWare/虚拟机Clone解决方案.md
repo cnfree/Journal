@@ -6,4 +6,4 @@
 4. 重启虚拟机，输入【cd /etc/sysconfig/network-scripts/】命令后，再执行【ip addr】命令，查看网卡名称
 5. 输入命令【vi ifcfg-网卡名称】打开网卡设置文件，编辑HWADDR，修改为第3步设置的Mac地址，修改IPADDR为新的IP地址
 6. 重启网络 service network restart
-7. 修改机器名称 hostnamectl set-hostname <newhostname>
+7. 修改机器名称 hostnamectl set-hostname &lt;newhostname&gt;
