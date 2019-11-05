@@ -55,3 +55,12 @@ https://www.cnblogs.com/ding2016/p/10784620.html
 * https://blog.csdn.net/hjxzb/article/details/82823191#master_36
 * https://www.cnblogs.com/RainingNight/p/deploying-k8s-dashboard-ui.html
 * https://www.jianshu.com/p/21d916643560
+
+## k8s dashboard 一键生成ssl证书脚本
+* https://blog.csdn.net/weixin_43421352/article/details/86651062
+
+## Dashboard使用自定义证书
+* https://blog.csdn.net/chenleiking/article/details/81488028
+
+## k8s dashboard 认证方式
+* https://blog.csdn.net/it_zhouzhenfeng/article/details/89392711
