@@ -64,3 +64,6 @@ https://www.cnblogs.com/ding2016/p/10784620.html
 
 ## k8s dashboard 认证方式
 * https://blog.csdn.net/it_zhouzhenfeng/article/details/89392711
+
+## 删除K8s Namespace时卡在Terminating状态
+* https://blog.csdn.net/weweeeeeeee/article/details/100036417
