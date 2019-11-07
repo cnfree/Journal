@@ -81,3 +81,6 @@ https://www.cnblogs.com/ding2016/p/10784620.html
     reload systemctl daemon-reload && systemctl restart kubelet
     should work now kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"
     ```
+
+## no metrics known for pod
+metrics-server-deployment.yaml args 增加 --v=2 或者 --v=10
