@@ -83,4 +83,4 @@ https://www.cnblogs.com/ding2016/p/10784620.html
     ```
 
 ## no metrics known for pod
-metrics-server-deployment.yaml args 增加 --v=2 或者 --v=10
+* metrics-server-deployment.yaml args 增加 --v=2 或者 --v=10
