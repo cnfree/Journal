@@ -84,3 +84,8 @@ https://www.cnblogs.com/ding2016/p/10784620.html
 
 ## no metrics known for pod
 * metrics-server-deployment.yaml args 增加 --v=2 或者 --v=10
+
+## dashboard 无法显示监控信息异常
+* 日志查看： Internal error occurred: No metric client provided.
+* https://stackoverflow.com/questions/57137683/how-to-troubleshoot-metrics-server-on-kubeadm
+* dashboard-metrics-scraper spec.template.spec 增加 hostNetwork: true
