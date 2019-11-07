@@ -48,7 +48,7 @@ https://www.cnblogs.com/ding2016/p/10784620.html
 * kubectl get pods --all-namespaces
 * https://www.cnblogs.com/liangDream/p/7358847.html
 
-## 异常解决
+## 异常解决kubectl describe apiservice v1beta1.metrics.k8s.io
 * https://www.jianshu.com/p/c92e46e193aa
 
 ## 安装dashboard
@@ -67,3 +67,17 @@ https://www.cnblogs.com/ding2016/p/10784620.html
 
 ## 删除K8s Namespace时卡在Terminating状态
 * https://blog.csdn.net/weweeeeeeee/article/details/100036417
+
+## kubectl top异常问题
+* kubectl get pod --all-namespaces |grep metrics-server 查看服务状态
+* kubectl describe apiservice v1beta1.metrics.k8s.io 查看异常原因
+* FailedDiscoveryCheck问题
+  * https://github.com/kubernetes-sigs/metrics-server/issues/45
+    ```
+    SOLUTION (if you are behind Corporate Proxy)
+
+    Get Cluster-IP of your metrics server kubectl -n=kube-system get services
+    Add the IP to no_proxy variable in the kube-apiserver config vi /etc/kubernetes/manifests/kube-apiserver.yaml
+    reload systemctl daemon-reload && systemctl restart kubelet
+    should work now kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"
+    ```
