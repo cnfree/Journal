@@ -9,12 +9,13 @@
 **命名规范用于区分生产者和消费者分别属于哪个部门，采用何种方式进行路由**
 
 * 本部门通讯集群命名规范：
-  * exchange: 部门简称_exchangeName_路由方式_exchage，例如公共的短信服务exchange可以命名为：common_sms_topic_exchange
-  * queue: sa_部门简称_queueName_路由方式_queue，例如公共的短信服务的topic路由Queue可以命名为：sa_common_sms_topic_queue (sa, standalone 简写)
+  * exchange: 部门简称_exchangeName_路由方式_exchage
+  * queue: sa_部门简称_queueName_路由方式_queue
+  * sa: standalone 简写
 
 * 跨部门通讯集群命名规范：
-  * exchange: cluster_exchangeName_路由方式_exchage，例如平台到B端的订单服务可以命名为：cluster_order_topic_exchange
-  * queue: cluster_producer部门_consumer部门_queueName_路由方式_queue, 例如平台到B端的订单服务可以命名为：cluster_ymt_b_order_topic_queue
+  * exchange: cluster_exchangeName_路由方式_exchage
+  * queue: cluster_producer部门_consumer部门_queueName_路由方式_queue
   * 广播路由queue命名不包含consumer部门
 
 ## 广播路由
