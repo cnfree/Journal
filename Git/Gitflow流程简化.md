@@ -13,7 +13,4 @@
 * 所有的提测、发布操作前，由开发专员负责合并Master分支到当前分支
 * 所有的提测、发布操作，由运维人员自动化保障提交分支包含Master分支最新的CommitId
 
-## 问题
-* 没有release分支，如何做预发布？
-
 [gitflow简化版]: img/gitflow简化版.png
