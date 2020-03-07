@@ -29,6 +29,7 @@
 * Maxwell 会格式化Filter表达式，可以不输入空格进行间隔
 
 * 如果Binlog被删除，Position位置早于Mysql当前binlog文件位置，Maxwell会启动后异常退出
+    * 异常信息：Could not find first log file name in binary log index file
 
 * 如果采用Kafka方式连接，当topic不存在或无法创建时，Maxwell会启动后异常退出
 
