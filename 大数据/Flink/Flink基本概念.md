@@ -9,7 +9,7 @@
   * JobManager：是主（master）节点，相当于YARN里面的ResourceManager，生成环境中一般可以做HA高可用。JobManager会将任务进行拆分，调度到TaskManager上面执行。
   * TaskManager：是从节点（slave），TaskManager才是真正实现task的部分
   * ResourceManager：一般是Yarn，当TM有空闲的slot就会告诉JM，没有足够的slot也会启动新的TM。kill掉长时间空闲的TM。
-  *nDispatcher（Application Master）提供REST接口来接收client的application提交，它负责启动JM和提交application，同时运行Web UI。
+  * Dispatcher（Application Master）提供REST接口来接收client的application提交，它负责启动JM和提交application，同时运行Web UI。
   
 ## Application Deployment
  

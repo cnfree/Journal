@@ -148,10 +148,12 @@
 
 ## 数据采集  
  ![数据采集]
-  
-  
+
+## 参考文档
+* [Skywalking容量规划]
        
 [Skywalking]:img/Skywalking.png
 [Agent]:img/Agent.png
 [collector]:img/collector.jpg
 [数据采集]:img/数据采集.png
+[Skywalking容量规划]: https://blog.csdn.net/flysqrlboy/article/details/89009200
