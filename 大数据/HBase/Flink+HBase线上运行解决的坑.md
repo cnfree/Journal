@@ -39,7 +39,7 @@
 ## HBase 部分
 * HBase数据模型
   * https://blog.csdn.net/WYpersist/article/details/79820715
-  https://blog.csdn.net/xiaoshunzi111/article/details/69844526
+  * https://blog.csdn.net/xiaoshunzi111/article/details/69844526
 * HBase内存模型
   * https://www.pianshen.com/article/2343339600/
 * HBase Region计算公式
