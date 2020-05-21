@@ -18,6 +18,9 @@
       <value>*</value>
     </property>
   ```
+* CDH KrbException: Checksum failed
+  * 重新生成Keytab，重启集群服务
+  * https://blog.csdn.net/weixin_42240930/article/details/82866331
 
 ## 域名映射部分
 * CDH集群Kafka无法访问
