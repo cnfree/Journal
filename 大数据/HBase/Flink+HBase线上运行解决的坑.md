@@ -75,3 +75,10 @@
 * Phoenix Core访问无kerberos认证的HBase出现kerberos的问题
   * 查看是否引入了错误的hbase client配置(包含 core-site.xml, hbase-site.xml, hdfs-site.xml)
   * 如有问题，从CDH HBase下载最新的客户端配置
+## MR Job 
+ * Job 提交失败，异常信息：Requested user hdfs is not whitelisted and has id 496,which is below the minimum allowed 1000
+   * Linux user 的 user id 要大于等于1000，否则会无法提交Job 
+   * 如果以hdfs（id为490）的身份提交一个job，就会看到以上的错误信息
+   * 解决方法：
+      1. 使用命令 usermod -u 修改一个用户的user id 
+      2. 修改Clouder关于这个该项的设置，Yarn->配置->min.user.id修改为合适的值，当前为0
